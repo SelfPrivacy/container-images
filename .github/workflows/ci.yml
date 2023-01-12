@@ -13,14 +13,16 @@ jobs:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v2
       # Trust our self-signed certificate
-      - run: echo "$REGISTRY_SELFSIGNED_CERT" | sudo tee /etc/ssl/certs/registry.crt
+      - run: echo "$REGISTRY_SELFSIGNED_CERT" | sudo tee /usr/local/share/ca-certificates/registry.crt
         env:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
       - run: sudo update-ca-certificates
-      # Build, login, and push
-      - run: docker build . --tag=localhost/flutter-build-env
-      - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
-        env:
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-      - run: docker push localhost/flutter-build-env docker://registry.selfprivacy.org:5001/flutter-build-env:latest
+      # Debug
+      - run: echo "$REGISTRY_SELFSIGNED_CERT"
+      # # Build, login, and push
+      # - run: docker build . --tag=localhost/flutter-build-env
+      # - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
+      #   env:
+      #     REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      #     REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      # - run: docker push localhost/flutter-build-env docker://registry.selfprivacy.org:5001/flutter-build-env:latest
