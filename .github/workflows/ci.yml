@@ -16,7 +16,7 @@ jobs:
       - run: echo "$REGISTRY_SELFSIGNED_CERT" | sudo tee /etc/ssl/certs/registry.crt
         env:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
-      - run: update-ca-certificates
+      - run: sudo update-ca-certificates
       # Build, login, and push
       - run: docker build . --tag=localhost/flutter-build-env
       - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="REGISTRY_PASSWORD"
