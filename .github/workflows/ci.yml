@@ -18,10 +18,15 @@ jobs:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
       - run: sudo update-ca-certificates
       - run: sudo systemctl restart docker
-      # # Build, login, and push
-      # - run: docker build . --tag=localhost/flutter-build-env
+      # Login, build, and push
       - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
         env:
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-      # - run: docker push localhost/flutter-build-env docker://registry.selfprivacy.org:5001/flutter-build-env:latest
+      - uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: "registry.selfprivacy.org:5001/flutter-build-env:latest"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
