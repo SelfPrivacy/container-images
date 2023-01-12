@@ -13,11 +13,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v2
       # Trust our self-signed certificate
-      - run: mkdir /etc/docker/certs.d/registry.selfprivacy.org:5001
+      - run: sudo mkdir -p /etc/docker/certs.d/registry.selfprivacy.org:5001
       - run: echo "$REGISTRY_SELFSIGNED_CERT" | sudo tee /etc/docker/certs.d/registry.selfprivacy.org:5001/ca.crt
         env:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
-      - run: sudo update-ca-certificates
       # Login, build, and push
       - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
         env:
