@@ -17,6 +17,7 @@ jobs:
         env:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
       - run: sudo update-ca-certificates
+      - run: cat /usr/local/share/ca-certificates/registry.crt
       # # Build, login, and push
       # - run: docker build . --tag=localhost/flutter-build-env
       - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
