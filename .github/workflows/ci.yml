@@ -22,14 +22,11 @@ jobs:
         env:
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-      # Debug
-      - run: docker pull ubuntu:latest
-      - run: docker tag ubuntu:latest registry.selfprivacy.org:5001/ubuntu:latest
-      - run: docker push registry.selfprivacy.org:5001/ubuntu:latest
-      # - uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: "registry.selfprivacy.org:5001/flutter-build-env:latest"
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: false
+          tags: "registry.selfprivacy.org:5001/flutter-build-env:latest"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - run: docker push registry.selfprivacy.org:5001/flutter-build-env:latest
