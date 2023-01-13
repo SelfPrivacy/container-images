@@ -24,7 +24,8 @@ jobs:
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       # Debug
       - run: docker pull ubuntu:latest
-      - run: docker push ubuntu:latest docker://registry.selfprivacy.org:5001/ubuntu:latest
+      - run: docker tag ubuntu:latest registry.selfprivacy.org:5001/ubuntu:latest
+      - run: docker push docker://registry.selfprivacy.org:5001/ubuntu:latest
       # - uses: docker/build-push-action@v3
       #   with:
       #     context: .
