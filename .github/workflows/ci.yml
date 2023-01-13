@@ -17,16 +17,17 @@ jobs:
       - run: echo "$REGISTRY_SELFSIGNED_CERT" | sudo tee /etc/docker/certs.d/registry.selfprivacy.org:5001/ca.crt
         env:
           REGISTRY_SELFSIGNED_CERT: ${{ secrets.REGISTRY_SELFSIGNED_CERT }}
-      # Login, build, and push
-      - run: docker login registry.selfprivacy.org:5001 -u="$REGISTRY_USERNAME" -p="$REGISTRY_PASSWORD"
-        env:
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      # Login to our container registry
+      - uses: docker/login-action@v2
+        with:
+          registry: registry.selfprivacy.org:5001
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      # Build and push image to the registry
       - uses: docker/build-push-action@v3
         with:
           context: .
-          push: false
+          push: true
           tags: "registry.selfprivacy.org:5001/flutter-build-env:latest"
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - run: docker push registry.selfprivacy.org:5001/flutter-build-env:latest
