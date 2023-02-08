@@ -39,7 +39,7 @@ ENV ANDROID_SDK_ROOT "${ANDROID_HOME}"
 ENV PATH "$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/build-tools/30.0.3:/opt/flutter/bin"
 
 # Install needed Android SDK packages
-RUN yes | sdkmanager 'build-tools;30.0.3' 'platforms;android-29' 'platforms;android-30' 'platforms;android-31'
+RUN yes | sdkmanager 'build-tools;30.0.3' 'platforms;android-29' 'platforms;android-30' 'platforms;android-31' 'platforms;android-33'
 
 WORKDIR /tmp
 
