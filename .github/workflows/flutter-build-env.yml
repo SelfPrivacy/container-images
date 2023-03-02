@@ -1,4 +1,4 @@
-name: Image Builder
+name: Flutter Build Environment Image
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
       # Build and push image to the registry
       - uses: docker/build-push-action@v3
         with:
-          context: .
+          context: flutter-build-env/
           push: true
           tags: "registry.selfprivacy.org:5001/flutter-build-env:latest"
           cache-from: type=gha
