@@ -11,7 +11,7 @@ ARG PACKAGES="build-essential openjdk-11-jdk-headless clang cmake curl git jq li
               strace util-linux zsync"
 ARG ANDROID_SDK_TOOLS_VERSION="9477386"
 ARG ANDROID_SDK_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS_VERSION}_latest.zip"
-ARG FLUTTER_VERSION="3.7.8"
+ARG FLUTTER_VERSION="3.10.2"
 ARG FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
 ARG FREEDESKTOP_SDK_VERSION="22.08"
 
