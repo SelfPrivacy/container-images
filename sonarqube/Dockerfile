@@ -5,7 +5,7 @@ USER root
 ARG FLUTTER_VERSION=3.16.1
 ARG FLUTTER_URL=https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz
 ARG FLUTTER_ANALYZER_VERSION=0.5.0
-ARG FLUTTER_ANALYZER_URL=https://github.com/insideapp-oss/sonar-flutter/releases/download/0.4.0/sonar-flutter-plugin-${FLUTTER_ANALYZER_VERSION}.jar
+ARG FLUTTER_ANALYZER_URL=https://github.com/insideapp-oss/sonar-flutter/releases/download/${FLUTTER_ANALYZER_VERSION}/sonar-flutter-plugin-${FLUTTER_ANALYZER_VERSION}.jar
 ARG FLUTTER_HOME=${SONARQUBE_HOME}/flutter
 
 RUN apt-get update && apt-get install -y xz-utils python3-pip
