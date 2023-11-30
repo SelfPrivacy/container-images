@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-ARG PACKAGES="build-essential openjdk-11-jdk-headless clang cmake curl git jq libblkid1 \
+ARG PACKAGES="build-essential openjdk-17-jdk-headless clang cmake curl git jq libblkid1 \
               libblkid-dev libc6 libc6-dev libc-bin libcrypt1 libdbus-1-3 libexpat1 libffi7 \
               libgcc-s1 libgcrypt20 libgcrypt20-dev libglib2.0-0 libglib2.0-dev libglu1-mesa \
               libgpg-error0 libgtk-3-0 libgtk-3-dev liblz4-1 liblz4-dev liblzma5 liblzma-dev \
