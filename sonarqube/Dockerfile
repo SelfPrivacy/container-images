@@ -18,9 +18,9 @@ ADD --chown=sonarqube:sonarqube $FLUTTER_ANALYZER_URL ${SQ_EXTENSIONS_DIR}/plugi
 RUN tar -vxf flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
     rm flutter_linux_${FLUTTER_VERSION}-stable.tar.xz
 
-RUN chown -R sonarqube:sonarqube flutter/
-
 RUN ${FLUTTER_HOME}/bin/flutter doctor
+
+RUN chown -R sonarqube:sonarqube flutter/
 
 USER sonarqube
 
