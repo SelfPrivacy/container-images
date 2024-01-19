@@ -55,4 +55,4 @@ RUN rm -rf deps
 RUN find $GRADLE_USER_HOME/daemon -exec chmod 777 {} \;
 
 # Install AppImage Builder and F-Droid Server
-RUN pip3 install git+https://github.com/AppImageCrafters/appimage-builder.git fdroidserver
+RUN pip3 install git+https://github.com/AppImageCrafters/appimage-builder.git fdroidserver androguard==3.4.0a1
