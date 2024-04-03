@@ -11,7 +11,7 @@ ARG PACKAGES="build-essential openjdk-17-jdk-headless clang cmake curl git jq li
               strace util-linux zsync"
 ARG ANDROID_SDK_TOOLS_VERSION="10406996"
 ARG ANDROID_SDK_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS_VERSION}_latest.zip"
-ARG FLUTTER_VERSION="3.16.1"
+ARG FLUTTER_VERSION="3.19.5"
 ARG FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
 ARG FREEDESKTOP_SDK_VERSION="22.08"
 
@@ -39,7 +39,7 @@ ENV ANDROID_SDK_ROOT "${ANDROID_HOME}"
 ENV PATH "$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/build-tools/30.0.3:/opt/flutter/bin"
 
 # Install needed Android SDK packages
-RUN yes | sdkmanager 'build-tools;34.0.0' 'platforms;android-29' 'platforms;android-30' 'platforms;android-31' 'platforms;android-33'
+RUN yes | sdkmanager 'build-tools;34.0.0' 'platforms;android-29' 'platforms;android-30' 'platforms;android-31' 'platforms;android-34'
 
 WORKDIR /tmp
 
