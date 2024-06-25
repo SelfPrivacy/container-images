@@ -50,6 +50,8 @@ RUN git clone --depth=1 --single-branch https://git.selfprivacy.org/kherel/selfp
 WORKDIR /tmp/deps
 RUN flutter build linux
 RUN flutter build apk --flavor production
+# Gradle creates even more files that are needed later, so fuck it, fuck
+RUN chmod -R 777 $FLUTTER_HOME
 WORKDIR /tmp
 RUN rm -rf deps
 RUN find $GRADLE_USER_HOME/daemon -exec chmod 777 {} \;
