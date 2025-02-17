@@ -36,7 +36,7 @@ RUN git config --system --add safe.directory $FLUTTER_HOME
 
 ENV ANDROID_HOME "/opt/android-sdk"
 ENV ANDROID_SDK_ROOT "${ANDROID_HOME}"
-ENV PATH "$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/build-tools/30.0.3:/opt/flutter/bin"
+ENV PATH "$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/build-tools/34.0.0:/opt/flutter/bin"
 
 # Install needed Android SDK packages
 RUN yes | sdkmanager 'build-tools;34.0.0' 'platforms;android-29' 'platforms;android-30' 'platforms;android-31' 'platforms;android-34'
