@@ -1,4 +1,4 @@
-FROM docker.io/sonarqube:lts
+FROM docker.io/sonarqube:24.12.0.100206-community
 
 USER root
 
