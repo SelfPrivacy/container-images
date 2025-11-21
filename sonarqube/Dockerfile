@@ -22,7 +22,7 @@ RUN chown -R root:root flutter/
 
 RUN ${FLUTTER_HOME}/bin/flutter doctor
 
-RUN chown -R sonarqube:sonarqube flutter/
+RUN chown -R sonarqube flutter/
 
 USER sonarqube
 
