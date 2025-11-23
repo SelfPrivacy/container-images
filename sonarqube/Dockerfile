@@ -1,4 +1,4 @@
-FROM docker.io/sonarqube:24.12.0.100206-community
+FROM docker.io/sonarqube:25.11.0.114957-community
 
 USER root
 
