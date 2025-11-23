@@ -8,9 +8,7 @@ ARG FLUTTER_ANALYZER_VERSION=0.5.0
 ARG FLUTTER_ANALYZER_URL=https://github.com/insideapp-oss/sonar-flutter/releases/download/${FLUTTER_ANALYZER_VERSION}/sonar-flutter-plugin-${FLUTTER_ANALYZER_VERSION}.jar
 ARG FLUTTER_HOME=${SONARQUBE_HOME}/flutter
 
-RUN apt-get update && apt-get install -y xz-utils python3-pip git
-
-RUN pip install bandit
+RUN apt-get update && apt-get install -y xz-utils python3-pip git python3-bandit
 
 ADD $FLUTTER_URL ${SONARQUBE_HOME}/
 ADD --chown=sonarqube:sonarqube $FLUTTER_ANALYZER_URL ${SQ_EXTENSIONS_DIR}/plugins/
