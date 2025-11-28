@@ -1,30 +1,29 @@
-# Build stage for sonarqube-community-branch-plugin (Java plugin)
-FROM gradle:8.9-jdk17-jammy AS plugin-builder
+# Clone stage for sonarqube-community-branch-plugin source
+# Note: Using master branch to get latest updates for newer SonarQube versions.
+# For production, consider pinning to a specific commit hash for reproducibility.
+FROM alpine:3.20 AS source
 
 ARG COMMUNITY_BRANCH_PLUGIN_GITREF=master
-ARG WORKDIR=/home/build/project
 
-WORKDIR ${WORKDIR}
+RUN apk add --no-cache git
+WORKDIR /source
 RUN git clone --recurse-submodules https://github.com/mc1arke/sonarqube-community-branch-plugin.git . && \
     git checkout ${COMMUNITY_BRANCH_PLUGIN_GITREF} && \
     git submodule update --init --recursive
 
+# Build stage for sonarqube-community-branch-plugin (Java plugin)
+FROM gradle:8.9-jdk17-jammy AS plugin-builder
+
+COPY --from=source /source /home/build/project
+WORKDIR /home/build/project
 RUN gradle build -x test --no-daemon
 
 # Build stage for sonarqube-webapp
 FROM node:22-alpine AS webapp-builder
 
-ARG COMMUNITY_BRANCH_PLUGIN_GITREF=master
-ARG WORKDIR=/home/build/project
-
-WORKDIR ${WORKDIR}
-RUN apk add --no-cache git
-RUN git clone --recurse-submodules https://github.com/mc1arke/sonarqube-community-branch-plugin.git . && \
-    git checkout ${COMMUNITY_BRANCH_PLUGIN_GITREF} && \
-    git submodule update --init --recursive
-
-WORKDIR ${WORKDIR}/sonarqube-webapp
-RUN cp -r ${WORKDIR}/sonarqube-webapp-addons ${WORKDIR}/sonarqube-webapp/libs/sq-server-addons
+COPY --from=source /source /home/build/project
+WORKDIR /home/build/project/sonarqube-webapp
+RUN cp -r /home/build/project/sonarqube-webapp-addons /home/build/project/sonarqube-webapp/libs/sq-server-addons
 RUN yarn install
 RUN yarn nx run sq-server:build
 
@@ -45,11 +44,15 @@ ADD $FLUTTER_URL ${SONARQUBE_HOME}/
 ADD --chown=sonarqube:sonarqube $FLUTTER_ANALYZER_URL ${SQ_EXTENSIONS_DIR}/plugins/
 
 # Copy the built community branch plugin and rename to consistent name
+# The build produces a single JAR with version suffix; we rename it for predictable ENV variable references
 COPY --from=plugin-builder /home/build/project/build/libs/sonarqube-community-branch-plugin-*.jar /tmp/
-RUN mv /tmp/sonarqube-community-branch-plugin-*.jar ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar && \
+RUN JAR_COUNT=$(ls -1 /tmp/sonarqube-community-branch-plugin-*.jar 2>/dev/null | wc -l) && \
+    if [ "$JAR_COUNT" -ne 1 ]; then echo "Error: Expected 1 JAR file, found $JAR_COUNT" && exit 1; fi && \
+    mv /tmp/sonarqube-community-branch-plugin-*.jar ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar && \
     chown sonarqube:sonarqube ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar
 
-# Copy the built webapp to replace the default web directory
+# Replace the default web directory with the plugin's modified webapp
+# This is required for branch/PR UI functionality as per plugin installation instructions
 RUN rm -rf ${SONARQUBE_HOME}/web/*
 COPY --from=webapp-builder --chown=sonarqube:sonarqube /home/build/project/sonarqube-webapp/apps/sq-server/build/webapp/ ${SONARQUBE_HOME}/web/
 RUN chmod -R 550 ${SONARQUBE_HOME}/web
