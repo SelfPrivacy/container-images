@@ -7,7 +7,9 @@ ARG COMMUNITY_BRANCH_PLUGIN_GITREF=master
 
 RUN apk add --no-cache git
 WORKDIR /source
-RUN git clone --recurse-submodules https://github.com/mc1arke/sonarqube-community-branch-plugin.git . && \
+# Configure git to use HTTPS instead of SSH for GitHub URLs (submodules use SSH URLs)
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
+    git clone --recurse-submodules https://github.com/mc1arke/sonarqube-community-branch-plugin.git . && \
     git checkout ${COMMUNITY_BRANCH_PLUGIN_GITREF} && \
     git submodule update --init --recursive
 
