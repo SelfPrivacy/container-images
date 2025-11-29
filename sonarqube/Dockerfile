@@ -45,7 +45,7 @@ ARG FLUTTER_HOME=${SONARQUBE_HOME}/flutter
 RUN apt-get update && apt-get install -y xz-utils python3-pip git python3-bandit
 
 ADD $FLUTTER_URL ${SONARQUBE_HOME}/
-ADD --chown=sonarqube:sonarqube $FLUTTER_ANALYZER_URL ${SQ_EXTENSIONS_DIR}/plugins/
+ADD --chown=sonarqube $FLUTTER_ANALYZER_URL ${SQ_EXTENSIONS_DIR}/plugins/
 
 # Copy the built community branch plugin and rename to consistent name
 # The build produces a single JAR with version suffix; we rename it for predictable ENV variable references
@@ -53,12 +53,12 @@ COPY --from=plugin-builder /home/build/project/build/libs/sonarqube-community-br
 RUN JAR_COUNT=$(ls -1 /tmp/sonarqube-community-branch-plugin-*.jar 2>/dev/null | wc -l) && \
     if [ "$JAR_COUNT" -ne 1 ]; then echo "Error: Expected 1 JAR file, found $JAR_COUNT" && exit 1; fi && \
     mv /tmp/sonarqube-community-branch-plugin-*.jar ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar && \
-    chown sonarqube:sonarqube ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar
+    chown sonarqube ${SQ_EXTENSIONS_DIR}/plugins/sonarqube-community-branch-plugin.jar
 
 # Replace the default web directory with the plugin's modified webapp
 # This is required for branch/PR UI functionality as per plugin installation instructions
 RUN rm -rf ${SONARQUBE_HOME}/web/*
-COPY --from=webapp-builder --chown=sonarqube:sonarqube /home/build/project/apps/sq-server/build/webapp/ ${SONARQUBE_HOME}/web/
+COPY --from=webapp-builder --chown=sonarqube /home/build/project/apps/sq-server/build/webapp/ ${SONARQUBE_HOME}/web/
 RUN chmod -R 550 ${SONARQUBE_HOME}/web
 
 RUN tar -vxf flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
