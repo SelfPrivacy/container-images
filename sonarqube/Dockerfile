@@ -23,9 +23,11 @@ RUN gradle build -x test --no-daemon
 # Build stage for sonarqube-webapp
 FROM node:22-alpine AS webapp-builder
 
-COPY --from=source /source /home/build/project
-WORKDIR /home/build/project/sonarqube-webapp
-RUN cp -r /home/build/project/sonarqube-webapp-addons /home/build/project/sonarqube-webapp/libs/sq-server-addons
+# Copy only the webapp directory (not the entire source to avoid duplicate project definitions)
+COPY --from=source /source/sonarqube-webapp /home/build/project
+# Copy the addons contents into the libs directory
+COPY --from=source /source/sonarqube-webapp-addons /home/build/project/libs/sq-server-addons
+WORKDIR /home/build/project
 RUN yarn install
 RUN yarn nx run sq-server:build
 
@@ -56,7 +58,7 @@ RUN JAR_COUNT=$(ls -1 /tmp/sonarqube-community-branch-plugin-*.jar 2>/dev/null |
 # Replace the default web directory with the plugin's modified webapp
 # This is required for branch/PR UI functionality as per plugin installation instructions
 RUN rm -rf ${SONARQUBE_HOME}/web/*
-COPY --from=webapp-builder --chown=sonarqube:sonarqube /home/build/project/sonarqube-webapp/apps/sq-server/build/webapp/ ${SONARQUBE_HOME}/web/
+COPY --from=webapp-builder --chown=sonarqube:sonarqube /home/build/project/apps/sq-server/build/webapp/ ${SONARQUBE_HOME}/web/
 RUN chmod -R 550 ${SONARQUBE_HOME}/web
 
 RUN tar -vxf flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
