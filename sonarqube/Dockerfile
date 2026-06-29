@@ -1,9 +1,10 @@
-# Clone stage for sonarqube-community-branch-plugin source
-# Note: Using master branch to get latest updates for newer SonarQube versions.
-# For production, consider pinning to a specific commit hash for reproducibility.
+# Clone stage for sonarqube-community-branch-plugin source.
+# Pinned to a release tag that matches the SonarQube major.minor below;
+# mc1arke ships the branch plugin in lockstep with SQ versions, and using
+# `master` makes every image build pull untested submodule revisions.
 FROM alpine:3.20 AS source
 
-ARG COMMUNITY_BRANCH_PLUGIN_GITREF=master
+ARG COMMUNITY_BRANCH_PLUGIN_GITREF=26.5.0
 
 RUN apk add --no-cache git
 WORKDIR /source
@@ -32,13 +33,13 @@ RUN yarn install
 RUN yarn nx run sq-server:build
 
 # Main image
-FROM docker.io/sonarqube:25.11.0.114957-community
+FROM docker.io/sonarqube:26.5.0.122743-community
 
 USER root
 
 ARG FLUTTER_VERSION=3.32.6
 ARG FLUTTER_URL=https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz
-ARG FLUTTER_ANALYZER_VERSION=0.5.0
+ARG FLUTTER_ANALYZER_VERSION=0.5.2
 ARG FLUTTER_ANALYZER_URL=https://github.com/insideapp-oss/sonar-flutter/releases/download/${FLUTTER_ANALYZER_VERSION}/sonar-flutter-plugin-${FLUTTER_ANALYZER_VERSION}.jar
 ARG FLUTTER_HOME=${SONARQUBE_HOME}/flutter
 
