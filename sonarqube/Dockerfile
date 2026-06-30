@@ -4,7 +4,7 @@
 # `master` makes every image build pull untested submodule revisions.
 FROM alpine:3.20 AS source
 
-ARG COMMUNITY_BRANCH_PLUGIN_GITREF=26.5.0
+ARG COMMUNITY_BRANCH_PLUGIN_GITREF=25.12.0
 
 RUN apk add --no-cache git
 WORKDIR /source
@@ -35,7 +35,7 @@ RUN yarn install
 RUN yarn nx run sq-server:build
 
 # Main image
-FROM docker.io/sonarqube:26.5.0.122743-community
+FROM docker.io/sonarqube:25.12.0.117093-community
 
 USER root
 
