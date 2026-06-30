@@ -14,8 +14,10 @@ RUN git config --global url."https://github.com/".insteadOf "git@github.com:" &&
     git checkout ${COMMUNITY_BRANCH_PLUGIN_GITREF} && \
     git submodule update --init --recursive
 
-# Build stage for sonarqube-community-branch-plugin (Java plugin)
-FROM gradle:8.9-jdk17-jammy AS plugin-builder
+# Build stage for sonarqube-community-branch-plugin (Java plugin).
+# Use JDK 21 — SonarQube 26.x ships with class files at major version 65
+# (Java 21), so building the plugin against its libs needs javac 21+.
+FROM gradle:8.14-jdk21-jammy AS plugin-builder
 
 COPY --from=source /source /home/build/project
 WORKDIR /home/build/project
